@@ -45,17 +45,61 @@ class SandwichMachine:
 
     def check_resources(self, ingredients):
         """Returns True when order can be made, False if ingredients are insufficient."""
+        validity = True
+        if self.machine_resources["bread"] < recipes[ingredients]["ingredients"]["bread"]:
+            validity = False
+        if self.machine_resources["ham"] < recipes[ingredients]["ingredients"]["ham"]:
+            validity = False
+        if self.machine_resources["cheese"] < recipes[ingredients]["ingredients"]["cheese"]:
+            validity = False
+        return validity
 
     def process_coins(self):
         """Returns the total calculated from coins inserted.
            Hint: include input() function here, e.g. input("how many quarters?: ")"""
+        dollars = int(input("how many dollars?: "))
+        half_dollars = int(input("how many half dollars?: "))
+        quarters = int(input("how many quarters?: "))
+        nickels = int(input("how many nickels?: "))
+        return dollars + (half_dollars * 0.5) + (quarters * 0.25) + (nickels * 0.05)
 
     def transaction_result(self, coins, cost):
         """Return True when the payment is accepted, or False if money is insufficient.
            Hint: use the output of process_coins() function for cost input"""
+        if coins >= cost:
+            return True
+        else:
+            return False
 
     def make_sandwich(self, sandwich_size, order_ingredients):
         """Deduct the required ingredients from the resources.
            Hint: no output"""
 
+
 ### Make an instance of SandwichMachine class and write the rest of the codes ###
+sM = SandwichMachine(resources)
+while True:
+    selection = input("What would you like? (small/ medium/ large/ off/ report): ")
+    if selection == "off":
+        break
+
+    elif selection == "small":
+        print("small")
+        sM.check_resources(selection)
+
+    elif selection == "medium":
+        if sM.check_resources(selection) and sM.transaction_result(sM.process_coins(), recipes[selection]["cost"]):
+            #sM.make_sandwich()
+            print("money!!!")
+        else:
+            print("insufficient coins")
+
+    elif selection == "large":
+        print("large")
+        sM.check_resources(selection)
+
+    elif selection == "report":
+        print("report")
+
+    else:
+        print("invalid input")
