@@ -71,20 +71,18 @@ class SandwichMachine:
         """Return True when the payment is accepted, or False if money is insufficient.
            Hint: use the output of process_coins() function for cost input"""
         if coins == cost:
-            return True
-        elif coins > cost:
             diff = coins - cost
-            print("Here is your change:", diff)
+            print(f"Here is ${diff} in change.")
             return True
         else:
             return False
 
-    def make_sandwich(self, sandwich_size):
+    def make_sandwich(self, sandwich_size, order_ingredients):
         """Deduct the required ingredients from the resources.
            Hint: no output"""
-        self.machine_resources["bread"] -= recipes[sandwich_size]["ingredients"]["bread"]
-        self.machine_resources["ham"] -= recipes[sandwich_size]["ingredients"]["ham"]
-        self.machine_resources["cheese"] -= recipes[sandwich_size]["ingredients"]["cheese"]
+        self.machine_resources["bread"] -= order_ingredients[sandwich_size]["ingredients"]["bread"]
+        self.machine_resources["ham"] -= order_ingredients[sandwich_size]["ingredients"]["ham"]
+        self.machine_resources["cheese"] -= order_ingredients[sandwich_size]["ingredients"]["cheese"]
 
 
 ### Make an instance of SandwichMachine class and write the rest of the codes ###
@@ -98,25 +96,28 @@ while True:
         if not sM.check_resources(selection):
             continue
         if sM.transaction_result(sM.process_coins(), recipes[selection]["cost"]):
-            sM.make_sandwich(selection)
+            sM.make_sandwich(selection, recipes)
+            print(selection, "sandwich is ready. Bon appetit!")
         else:
-            print("insufficient coins")
+            print("Sorry, that’s not enough money. Money refunded")
 
     elif selection == "medium":
         if not sM.check_resources(selection):
             continue
         if sM.transaction_result(sM.process_coins(), recipes[selection]["cost"]):
-            sM.make_sandwich(selection)
+            sM.make_sandwich(selection, recipes)
+            print(selection, "sandwich is ready. Bon appetit!")
         else:
-            print("insufficient coins")
+            print("Sorry, that’s not enough money. Money refunded")
 
     elif selection == "large":
         if not sM.check_resources(selection):
             continue
         if sM.transaction_result(sM.process_coins(), recipes[selection]["cost"]):
-            sM.make_sandwich(selection)
+            sM.make_sandwich(selection, recipes)
+            print(selection, "sandwich is ready. Bon appetit!")
         else:
-            print("insufficient coins")
+            print("Sorry, that’s not enough money. Money refunded")
 
     elif selection == "report":
         print("Bread:", sM.machine_resources["bread"], "slice(s)")
