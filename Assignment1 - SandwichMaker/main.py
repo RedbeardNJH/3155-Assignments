@@ -57,6 +57,7 @@ class SandwichMachine:
     def process_coins(self):
         """Returns the total calculated from coins inserted.
            Hint: include input() function here, e.g. input("how many quarters?: ")"""
+        print("Please insert coins.")
         dollars = int(input("how many dollars?: "))
         half_dollars = int(input("how many half dollars?: "))
         quarters = int(input("how many quarters?: "))
@@ -66,7 +67,11 @@ class SandwichMachine:
     def transaction_result(self, coins, cost):
         """Return True when the payment is accepted, or False if money is insufficient.
            Hint: use the output of process_coins() function for cost input"""
-        if coins >= cost:
+        if coins == cost:
+            return True
+        elif coins > cost:
+            diff = coins - cost
+            print("Here is your change:", diff)
             return True
         else:
             return False
@@ -84,8 +89,11 @@ while True:
         break
 
     elif selection == "small":
-        print("small")
-        sM.check_resources(selection)
+        if sM.check_resources(selection) and sM.transaction_result(sM.process_coins(), recipes[selection]["cost"]):
+            # sM.make_sandwich()
+            print("money!!!")
+        else:
+            print("insufficient coins")
 
     elif selection == "medium":
         if sM.check_resources(selection) and sM.transaction_result(sM.process_coins(), recipes[selection]["cost"]):
@@ -95,11 +103,16 @@ while True:
             print("insufficient coins")
 
     elif selection == "large":
-        print("large")
-        sM.check_resources(selection)
+        if sM.check_resources(selection) and sM.transaction_result(sM.process_coins(), recipes[selection]["cost"]):
+            # sM.make_sandwich()
+            print("money!!!")
+        else:
+            print("insufficient coins")
 
     elif selection == "report":
-        print("report")
+        print("Bread:", sM.machine_resources["bread"], "slice(s)")
+        print("Ham:", sM.machine_resources["ham"], "slice(s)")
+        print("Cheese:", sM.machine_resources["cheese"], "slice(s)")
 
     else:
         print("invalid input")
