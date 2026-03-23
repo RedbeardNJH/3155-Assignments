@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 
 from .models import models, schemas
-from .controllers import orders, sandwiches, resources
+from .controllers import orders, sandwiches, resources, recipes
 from .dependencies.database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
@@ -117,3 +117,35 @@ def read_one_resource(resource_id: int, db: Session = Depends(get_db)):
     if resource is None:
         raise HTTPException(status_code=404, detail="User not found")
     return resource
+
+'''
+RECIPES
+'''
+
+@app.post("/recipes/", response_model=schemas.Recipe, tags=["Recipes"])
+def create_recipe(recipe: schemas.RecipeCreate, db: Session = Depends(get_db)):
+    return recipes.create(db=db, recipe=recipe)
+
+@app.put("/recipes/{recipe_id}", response_model=schemas.Recipe, tags=["Recipes"])
+def update_one_recipe(recipe_id: int, recipe: schemas.RecipeUpdate, db: Session = Depends(get_db)):
+    if recipe is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return recipes.update(db=db, recipe=recipe, recipe_id=recipe_id)
+
+@app.delete("/recipes/{recipe_id}", response_model=schemas.Recipe, tags=["Recipes"])
+def delete_one_recipe(recipe_id: int, db: Session = Depends(get_db)):
+    recipe = recipes.read_one(db, recipe_id=recipe_id)
+    if recipe is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return recipes.delete(db=db, recipe_id=recipe_id)
+
+@app.get("/recipes/", response_model=list[schemas.Recipe], tags=["Recipes"])
+def read_recipe(db: Session = Depends(get_db)):
+    return recipes.read_all(db)
+
+@app.get("/recipes/{recipe_id}", response_model=schemas.Recipe, tags=["Recipes"])
+def read_one_recipe(recipe_id: int, db: Session = Depends(get_db)):
+    recipe = recipes.read_one(db, recipe_id=recipe_id)
+    if recipe is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return recipe
